@@ -1,0 +1,2 @@
+-pt avr -p 1098 -mmcu m2560 -f ./test/Blinky.hex  -hfuse 0xd9 -lfuse 0xce
+

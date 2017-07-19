@@ -1,0 +1,1 @@
+-p m16 -U flash:r:test_firmwares/firmwares/flash_read_mine.bin -U eeprom:r:test_firmwares/firmwares/eeprom_read_mine.bin -U hfuse:w:0x99 -U lfuse:w:0xdf -v
