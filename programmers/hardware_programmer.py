@@ -8,17 +8,18 @@ from abc import abstractmethod, ABCMeta
 from intelhex import IntelHex
 
 
+PACKET_WAIT_TIMEOUT = 1.
+
+
 class HardwareProgrammer(object):
     """
     Wraps either HardwareProgrammer or StmProgrammer
     """
     __metaclass__ = ABCMeta
 
-    MAX_PACKET_SIZE = pl.MAX_PACKET_LENGTH - pl.SIZE_FIELD_SIZE -\
-        pl.TYPE_FIELD_SIZE
-
     MEMORY_EEPROM_BYTE = 0x01
     MEMORY_FLASH_BYTE = 0x00
+
 
     def __init__(self, network_manager):
         print("Saving packet manager")
@@ -72,17 +73,19 @@ class HardwareProgrammer(object):
     def send(self, raw_data, packet_type):
         self.packet_manager.send_raw(raw_data, packet_type)
 
-    def read_packet(self, timeout=pl.PACKET_WAIT_TIMEOUT):
+    def read_packet(self, timeout=PACKET_WAIT_TIMEOUT):
         return self.packet_manager.read_packet(timeout=timeout)
 
-    def send_recv(self, raw_data, packet_type, timeout=pl.PACKET_WAIT_TIMEOUT):
+    def send_recv(self, raw_data, packet_type,
+                  timeout=PACKET_WAIT_TIMEOUT):
         self.send(raw_data, packet_type)
         return self.read_packet(timeout=timeout)
 
     # ######################################
     # Sends command which is byte array
     # ######################################
-    def send_command(self, command, timeout=pl.PACKET_WAIT_TIMEOUT,
+    def send_command(self, command,
+                     timeout=PACKET_WAIT_TIMEOUT,
                      wait_answer=True):
 
         self.send(command, pt.CMD_PACKET)

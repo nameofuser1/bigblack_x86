@@ -15,8 +15,7 @@ import traceback
 from time import time
 import sys
 
-ESP_PORT = 2560
-
+ESP_PORT = 1000
 ERROR_CODE = err.ERROR_OK
 
 

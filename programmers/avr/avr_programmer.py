@@ -27,7 +27,7 @@ class AvrProgrammer(HardwareProgrammer):
         conf_parser.parse(dir_path + "/parts.conf")
         mcu_info = conf_parser.get_parts()[part_name]
 
-        self.max_pgm_memory_data_len = HardwareProgrammer.MAX_PACKET_SIZE
+        self.max_pgm_memory_data_len = pl.PL_MAX_DATA_LENGTH
 
         print("AvrProgrammer max_pgm_memory len: " +
               str(self.max_pgm_memory_data_len))
@@ -89,7 +89,7 @@ class AvrProgrammer(HardwareProgrammer):
     # Initialize programmer (usart possible)
     # #######################################
     def init_programmer(self):
-        ack = self.send_recv([pl.AVR_PROGRAMMER_BYTE], pt.PROG_INIT_PACKET)
+        ack = self.send_recv([pl.PL_AVR_PROGRAMMER_BYTE], pt.PROG_INIT_PACKET)
         self._check_packet(ack, pt.ACK_PACKET)
 
         self.send_mcu_init()
