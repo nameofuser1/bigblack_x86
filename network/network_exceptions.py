@@ -22,3 +22,11 @@ class NetworkConnectionError(NetworkBaseError):
     """
     def __init__(self, m=""):
         super(NetworkConnectionError, self).__init__(m)
+
+
+class BrokenPacketError(NetworkBaseError):
+    """
+    Raised when it is impossible to parse packet
+    """
+    def __init__(self, m=""):
+        super(BrokenPacketError, self).__init__(m)

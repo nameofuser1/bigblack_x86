@@ -1,6 +1,10 @@
 import logging
 import sys
 
+from .packet_parser import PacketType
+from .packet_manager import PacketManager
+from .network_manager import NetworkManager
+
 
 network_logger = logging.getLogger("network_logger")
 network_logger.setLevel(logging.DEBUG)

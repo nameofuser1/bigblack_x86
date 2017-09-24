@@ -5,14 +5,6 @@ class ProgrammerBaseError(IOError):
         super(ProgrammerBaseError, self).__init__(m)
 
 
-class BrokenPacketError(ProgrammerBaseError):
-    """
-    Raised when it is impossible to parse packet
-    """
-    def __init__(self, m=""):
-        super(BrokenPacketError, self).__init__(m)
-
-
 class HardwareError(ProgrammerBaseError):
     """
     Raised if something is wrong with hardware, e.g. uart/spi fail

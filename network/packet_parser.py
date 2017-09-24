@@ -1,4 +1,4 @@
-from . import programmer_exceptions as ex
+from . import network_exceptions as ex
 from network import protocol as pl
 
 

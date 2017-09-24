@@ -3,10 +3,8 @@ from .config_parser import ConfParser
 from .avr_defs import Avr
 
 from programmers.hardware_programmer import HardwareProgrammer
-from programmers.packet_parser import PacketType as pt
-from programmers import programmer_exceptions as p_ex
-
 from network import protocol as pl
+from network import PacketType as pt
 
 import math
 from time import sleep
@@ -20,8 +18,8 @@ class AvrProgrammer(HardwareProgrammer):
     ADDRESS_SIZE = 4
     TYPE_SIZE = 1
 
-    def __init__(self, part_name, network_manager):
-        super(AvrProgrammer, self).__init__(network_manager)
+    def __init__(self, part_name, packet_manager):
+        super(AvrProgrammer, self).__init__(packet_manager)
 
         conf_parser = ConfParser()
         conf_parser.parse(dir_path + "/parts.conf")

@@ -71,7 +71,7 @@ class TCPReceiver(object):
                     pack_queue.put(packet)
 
             except socket.timeout:
-                print("TIMEOUT WHILE READING TCP RECEIVER")
+                pass
 
     def start(self):
         if self.proc is None:

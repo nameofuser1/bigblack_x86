@@ -1,7 +1,7 @@
-from .packet_parser import PacketType as pt
 from . import programmer_exceptions as ex
 
 from network import protocol as pl
+from network import PacketType
 
 from abc import abstractmethod, ABCMeta
 from intelhex import IntelHex
@@ -19,9 +19,7 @@ class HardwareProgrammer(object):
     MEMORY_EEPROM_BYTE = 0x01
     MEMORY_FLASH_BYTE = 0x00
 
-
     def __init__(self, packet_manager):
-        print("Saving packet manager")
         self.packet_manager = packet_manager
 
     @abstractmethod

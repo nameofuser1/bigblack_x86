@@ -1,5 +1,5 @@
 from .packet_parser import PacketParser, PacketType
-from . import programmer_exceptions as ex
+from . import network_exceptions as ex
 
 
 class PacketManager(object):
@@ -33,9 +33,5 @@ class PacketManager(object):
         """
         packet = self.packet_parser.\
             parse(self.network_manager.read(timeout=timeout))
-
-        if packet["type"] == PacketType.ERROR_PACKET:
-            # TODO: based on error code specify string
-            raise ex.HardwareError("HardwareError")
 
         return packet
