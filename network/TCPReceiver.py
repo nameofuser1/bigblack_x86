@@ -32,6 +32,10 @@ class TCPReceiver(object):
 
         while remaining_bytes > 0:
             buf = bytearray(sock.recv(remaining_bytes))
+
+            if len(buf) == 0:
+                raise socket.timeout()
+
             data.extend(buf)
             remaining_bytes -= len(buf)
 
@@ -50,7 +54,7 @@ class TCPReceiver(object):
                         (int(length[1]) & 0xFF)
 
                     self.network_logger.debug("Got packet length: " +
-                                                str(packet_length))
+                                              str(packet_length))
 
                 else:
                     data = self.__recv_n_bytes(sock, packet_length - 2)
@@ -67,7 +71,7 @@ class TCPReceiver(object):
                     pack_queue.put(packet)
 
             except socket.timeout:
-                pass
+                print("TIMEOUT WHILE READING TCP RECEIVER")
 
     def start(self):
         if self.proc is None:

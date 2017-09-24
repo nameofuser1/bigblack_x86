@@ -1,4 +1,3 @@
-from .packet_manager import PacketManager
 from .packet_parser import PacketType as pt
 from . import programmer_exceptions as ex
 
@@ -21,9 +20,9 @@ class HardwareProgrammer(object):
     MEMORY_FLASH_BYTE = 0x00
 
 
-    def __init__(self, network_manager):
+    def __init__(self, packet_manager):
         print("Saving packet manager")
-        self.packet_manager = PacketManager(network_manager)
+        self.packet_manager = packet_manager
 
     @abstractmethod
     def _write_file_to_eeprom(self, eeprom_file, start_address, validate):

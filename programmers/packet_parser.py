@@ -4,25 +4,28 @@ from network import protocol as pl
 
 class PacketType(object):
 
-    PROG_INIT_PACKET = 1
-    STOP_PACKET = 2
-    CMD_PACKET = 3
-    RESET_PACKET = 4
-    PROG_MEM_PACKET = 5
-    USART_CONF_PACKET = 6
-    USART_PACKET = 7
-    ACK_PACKET = 8
-    AVR_PROG_INIT_PACKET = 9
-    READ_MEM_PACKET = 10
-    MEMORY_PACKET = 11
-    LOAD_NETWORK_INFO_PACKET = 12
-    LOAD_MCU_INFO_PACKET = 13
+    PROGRAMMER_INIT_PACKET = 1
+    PROGRAMMER_STOP_PACKET = 2
+    UART_INIT_PACKET = 3
+    UART_STOP_PACKET = 4
+    RESET_PACKET = 5
+    ACK_PACKET = 6
+    CLOSE_CONNECTION_PACKET = 7
+    NETWORK_CONFIG_PACKET = 8
+    SET_OBSERVER_KEY_PACKET = 9
+    SET_ENCRYPTION_KEYS_PACKET = 10
+    SET_SIGN_KEYS_PACKET = 11
+    ENABLE_ENCRYPTION_PACKET = 12
+    ENABLE_SIGN_PACKET = 13
 
+    LOAD_MCU_INFO_PACKET = 14
+    PROGRAM_MEMORY_PACKET = 15
+    READ_MEMORY_PACKET = 16
+    MEMORY_PACKET = 17
+    CMD_PACKET = 18
 
-class PacketError(object):
-
-    INTERNAL_ERROR = 1
-    WRONG_PACKET = 2
+    UART_CONFIGURATION_PACKET = 19
+    UARD_DATA_PACKET = 20
 
 
 class PacketParser(object):
@@ -30,6 +33,7 @@ class PacketParser(object):
         def __init__(self):
             self.packets_names = dict()
             self.__create_packet_names_dict()
+            self.__create_packet_type_byte_mappings()
 
         # ###########################################
         #   Create packet
@@ -71,7 +75,8 @@ class PacketParser(object):
         def create_packet(self, data, packet_type, comp=False, enc=False,
                           sign=False):
 
-            packet_len = len(data) + pl.PL_RESERVED_BYTES
+            packet_len = len(data)
+
 
             if packet_len > pl.PL_MAX_DATA_LENGTH:
                 raise ex.BrokenPacketError("Packet is too large "
@@ -95,112 +100,20 @@ class PacketParser(object):
             return packet
 
         def get_type(self, type_byte):
-            if type_byte == pl.PL_PROG_INIT_PACKET_BYTE:
-                return PacketType.PROG_INIT_PACKET
+            t = self._byte_to_type.get(type_byte)
 
-            elif type_byte == pl.PL_STOP_PACKET_BYTE:
-                return PacketType.STOP_PACKET
-
-            elif type_byte == pl.PL_CMD_PACKET_BYTE:
-                return PacketType.CMD_PACKET
-
-            elif type_byte == pl.PL_RESET_PACKET_BYTE:
-                return PacketType.RESET_PACKET
-
-            elif type_byte == pl.PL_PROG_MEM_PACKET_BYTE:
-                return PacketType.PROG_MEM_PACKET
-
-            elif type_byte == pl.PL_USART_CONF_PACKET_BYTE:
-                return PacketType.USART_CONF_PACKET
-
-            elif type_byte == pl.PL_USART_PACKET_BYTE:
-                return PacketType.USART_PACKET
-
-            elif type_byte == pl.PL_ERROR_PACKET_BYTE:
-                return PacketType.ERROR_PACKET
-
-            elif type_byte == pl.PL_ACK_PACKET_BYTE:
-                return PacketType.ACK_PACKET
-
-            elif type_byte == pl.PL_AVR_PROG_INIT_PACKET_BYTE:
-                return PacketType.AVR_PROG_INIT_PACKET
-
-            elif type_byte == pl.PL_READ_MEM_PACKET_BYTE:
-                return PacketType.READ_MEM_PACKET
-
-            elif type_byte == pl.PL_MEMORY_PACKET_BYTE:
-                return PacketType.MEMORY_PACKET
-
-            elif type_byte == pl.PL_AVR_PGM_ENABLE_BYTE:
-                return PacketType.AVR_PGM_ENABLE_PACKET
-
-            elif type_byte == pl.PL_LOAD_NETWORK_INFO_BYTE:
-                return PacketType.LOAD_NETWORK_INFO_PACKET
-
-            else:
+            if t is None:
                 raise ex.BrokenPacketError("Unknown packet type")
+
+            return t
 
         def _get_packet_byte(self, _type):
+            b = self._type_to_byte.get(_type)
 
-            if _type == PacketType.PROG_INIT_PACKET:
-                return pl.PL_PROGRAMMER_INIT
-
-            elif _type == PacketType.STOP_PACKET:
-                return pl.PL_PROGRAMMER_STOP
-
-            elif _type == PacketType.CMD_PACKET:
-                return pl.PL_CMD
-
-            elif _type == PacketType.RESET_PACKET:
-                return pl.PL_RESET
-
-            elif _type == PacketType.PROG_MEM_PACKET:
-                return pl.PL_PROGRAM_MEMORY
-
-            elif _type == PacketType.USART_CONF_PACKET:
-                return pl.PL_UART_CONFIGURATION
-
-            elif _type == PacketType.USART_PACKET:
-                return pl.PL_UART_DATA
-
-            elif _type == PacketType.ACK_PACKET:
-                return pl.PL_ACK
-
-            elif _type == PacketType.READ_MEM_PACKET:
-                return pl.PL_READ_MEMORY
-
-            elif _type == PacketType.MEMORY_PACKET:
-                return pl.PL_MEMORY
-
-            elif _type == PacketType.LOAD_MCU_INFO_PACKET:
-                return pl.PL_LOAD_MCU_INFO
-
-            elif _type == PacketType.LOAD_NETWORK_INFO_PACKET:
-                return pl.PL_LOAD_NETWORK_INFO_BYTE
-
-            else:
+            if b is None:
                 raise ex.BrokenPacketError("Unknown packet type")
 
-        def get_error_byte(self, error):
-            if error == PacketError.INTERNAL_ERROR:
-                return pl.PL_INTERNAL_ERROR_BYTE
-
-            elif error == PacketError.WRONG_PACKET:
-                return pl.PL_WRONG_PACKET_ERROR_BYTE
-
-            else:
-                raise ex.BrokenPacketError("Unknown error type")
-
-        def get_error_type(self, error_byte):
-
-            if error_byte == pl.PL_INTERNAL_ERROR_BYTE:
-                return PacketError.INTERNAL_ERROR
-
-            elif error_byte == pl.PL_WRONG_PACKET_ERROR_BYTE:
-                return PacketError.WRONG_PACKET
-
-            else:
-                raise ex.BrokenPacketError("Unknown error byte")
+            return b
 
         def get_packet_name(self, packet):
             packet_name = self.packets_names.get(packet["type"])
@@ -254,17 +167,57 @@ class PacketParser(object):
             return False
 
         def __create_packet_names_dict(self):
-            self.packets_names[PacketType.PROG_INIT_PACKET] = "ProgInitPacket"
-            self.packets_names[PacketType.STOP_PACKET] = "StopPacket"
-            self.packets_names[PacketType.CMD_PACKET] = "CmdPacket"
-            self.packets_names[PacketType.RESET_PACKET] = "ResetPacket"
-            self.packets_names[PacketType.PROG_MEM_PACKET] = "ProgMemPacket"
-            self.packets_names[PacketType.USART_CONF_PACKET] = "UsartConfPacket"
-            self.packets_names[PacketType.USART_PACKET] = "UsartPacket"
-            self.packets_names[PacketType.ACK_PACKET] = "AckPacket"
-            self.packets_names[PacketType.AVR_PROG_INIT_PACKET] =\
-                "AvrProgInitPacket"
-            self.packets_names[PacketType.READ_MEM_PACKET] = "AvrReadMemPacket"
-            self.packets_names[PacketType.MEMORY_PACKET] = "MemoryPacket"
-            self.packets_names[PacketType.LOAD_MCU_INFO_PACKET] =\
-                "LoadMcuInfoPacket"
+            self.packets_names = {
+                PacketType.PROGRAMMER_INIT_PACKET: "ProgrammerInitPacket",
+                PacketType.PROGRAMMER_STOP_PACKET: "ProgrammerStopPacket",
+                PacketType.UART_INIT_PACKET: "UartInitPacket",
+                PacketType.UART_STOP_PACKET: "UartStopPacket",
+                PacketType.RESET_PACKET: "ResetPacket",
+                PacketType.ACK_PACKET: "ACK packet",
+                PacketType.CLOSE_CONNECTION_PACKET: "CloseConnectionPacket",
+                PacketType.NETWORK_CONFIG_PACKET: "NetworkConfigPacket",
+                PacketType.SET_OBSERVER_KEY_PACKET: "SetObserverKeyPacket",
+                PacketType.SET_ENCRYPTION_KEYS_PACKET: "SetEncryptionKeysPacket",
+                PacketType.SET_SIGN_KEYS_PACKET: "SetSignKeysPacket",
+                PacketType.ENABLE_ENCRYPTION_PACKET: "EnableEncryptionPacket",
+                PacketType.ENABLE_SIGN_PACKET: "EnableSignPacket",
+
+                PacketType.LOAD_MCU_INFO_PACKET: "LoadMcuInfoPacket",
+                PacketType.PROGRAM_MEMORY_PACKET: "ProgramMemoryPacket",
+                PacketType.READ_MEMORY_PACKET: "ReadMemoryPacket",
+                PacketType.MEMORY_PACKET: "MemoryPacket",
+                PacketType.CMD_PACKET: "CMD Packet",
+
+                PacketType.UART_CONFIGURATION_PACKET: "UartConfigurationPacket",
+                PacketType.UARD_DATA_PACKET: "UartDataPacket"
+            }
+
+        def __create_packet_type_byte_mappings(self):
+            self._type_to_byte = {
+                PacketType.PROGRAMMER_INIT_PACKET: pl.PL_PROGRAMMER_INIT,
+                PacketType.PROGRAMMER_STOP_PACKET: pl.PL_PROGRAMMER_STOP,
+                PacketType.UART_INIT_PACKET: pl.PL_UART_INIT,
+                PacketType.UART_STOP_PACKET: pl.PL_UART_STOP,
+                PacketType.RESET_PACKET: pl.PL_RESET,
+                PacketType.ACK_PACKET: pl.PL_ACK,
+                PacketType.CLOSE_CONNECTION_PACKET: pl.PL_CLOSE_CONNECTION,
+                PacketType.NETWORK_CONFIG_PACKET: pl.PL_NETWORK_CONFIG,
+                PacketType.SET_OBSERVER_KEY_PACKET: pl.PL_SET_OBSERVER_KEY,
+                PacketType.SET_ENCRYPTION_KEYS_PACKET: pl.PL_SET_ENCRYPTION_KEYS,
+                PacketType.SET_SIGN_KEYS_PACKET: pl.PL_SET_SIGN_KEYS,
+                PacketType.ENABLE_ENCRYPTION_PACKET: pl.PL_ENABLE_ENCRYPTION,
+                PacketType.ENABLE_SIGN_PACKET: pl.PL_ENABLE_SIGN,
+
+                PacketType.LOAD_MCU_INFO_PACKET: pl.PL_LOAD_MCU_INFO,
+                PacketType.PROGRAM_MEMORY_PACKET: pl.PL_PROGRAM_MEMORY,
+                PacketType.READ_MEMORY_PACKET: pl.PL_READ_MEMORY,
+                PacketType.MEMORY_PACKET: pl.PL_MEMORY,
+                PacketType.CMD_PACKET: pl.PL_CMD,
+
+                PacketType.UART_CONFIGURATION_PACKET: pl.PL_UART_CONFIGURATION,
+                PacketType.UARD_DATA_PACKET: pl.PL_UART_DATA
+            }
+
+            self._byte_to_type = dict([v, k] for v,k in
+                                      self._type_to_byte.iteritems())
+

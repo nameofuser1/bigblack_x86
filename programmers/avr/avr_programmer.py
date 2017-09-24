@@ -89,7 +89,8 @@ class AvrProgrammer(HardwareProgrammer):
     # Initialize programmer (usart possible)
     # #######################################
     def init_programmer(self):
-        ack = self.send_recv([pl.PL_AVR_PROGRAMMER_BYTE], pt.PROG_INIT_PACKET)
+        ack = self.send_recv([pl.PL_AVR_PROGRAMMER_BYTE],
+                             pt.PROGRAMMER_INIT_PACKET)
         self._check_packet(ack, pt.ACK_PACKET)
 
         self.send_mcu_init()
@@ -145,7 +146,7 @@ class AvrProgrammer(HardwareProgrammer):
         init_data.append(self.eeprom_wait)
         init_data.extend(self.pgm_enable)
 
-        packet = self.send_recv(init_data, pt.AVR_PROG_INIT_PACKET)
+        packet = self.send_recv(init_data, pt.LOAD_MCU_INFO_PACKET)
         self._check_packet(packet, pt.CMD_PACKET)
 
         if int(packet["data"][0]) == 0:
@@ -159,7 +160,7 @@ class AvrProgrammer(HardwareProgrammer):
     # Must get acknowledge packet
     # #########################################
     def send_stop(self):
-        packet = self.send_recv([], pt.STOP_PACKET)
+        packet = self.send_recv([], pt.PROGRAMMER_STOP_PACKET)
         self._check_packet(packet, pt.ACK_PACKET)
 
     # ########################################

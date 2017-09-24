@@ -3,10 +3,10 @@ import sys
 
 
 network_logger = logging.getLogger("network_logger")
-network_logger.setLevel(logging.INFO)
+network_logger.setLevel(logging.DEBUG)
 
 f_handler = logging.FileHandler("logs/network.log", "w")
-f_handler.setLevel(logging.INFO)
+f_handler.setLevel(logging.DEBUG)
 f_handler.setFormatter(logging.Formatter("%(asctime)s "
                                          "%(levelname)s "
                                          "%(message)s"))
