@@ -18,8 +18,11 @@ class NetworkManager(object):
         self.start_listener()
 
     def stop(self):
-        self.stop_listener()
-        self.sock.close()
+        try:
+            self.send_raw([], PacketType.CLOSE_CONNECTION_PACKET)
+        finally:
+            self.stop_listener()
+            self.sock.close()
 
     def start_listener(self):
         if self.receiver is None:

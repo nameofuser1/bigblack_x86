@@ -157,7 +157,7 @@ class AvrProgrammer(HardwareProgrammer):
     # Send stop packet
     # Must get acknowledge packet
     # #########################################
-    def send_stop(self):
+    def stop_programmer(self):
         packet = self.send_recv([], pt.PROGRAMMER_STOP_PACKET)
         self._check_packet(packet, pt.ACK_PACKET)
 

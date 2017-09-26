@@ -147,9 +147,8 @@ if __name__ == "__main__":
 
     finally:
         try:
-            packet_manager.send_raw([], PacketType.CLOSE_CONNECTION_PACKET)
+            programmer.stop_programmer()
         finally:
             traceback.print_exc()
-            print("Sending stop")
             network_manager.stop()
             exit(ERROR_CODE)
