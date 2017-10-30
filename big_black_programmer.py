@@ -9,7 +9,7 @@ from network import network_exceptions as net_ex
 from programmers.avr.avr_programmer import AvrProgrammer
 from programmers import programmer_exceptions as p_ex
 from programmers.avr import avr_exceptions as avr_ex
-from programmers.packet_manager import PacketManager, PacketType
+from network.packet_manager import PacketManager, PacketType
 
 import traceback
 
@@ -55,12 +55,11 @@ if __name__ == "__main__":
         exit(err.ARGUMENTS_ERROR)
 
     network_manager = esp_connect()
+    packet_manager = PacketManager(network_manager)
 
     try:
-        network_manager.start()
+        packet_manager.start()
         print("Connected")
-
-        packet_manager = PacketManager(network_manager)
 
         programmer = AvrProgrammer(mmcu, packet_manager)
         print("Initialize programmer")
@@ -150,5 +149,5 @@ if __name__ == "__main__":
             programmer.stop_programmer()
         finally:
             traceback.print_exc()
-            network_manager.stop()
+            packet_manager.stop()
             exit(ERROR_CODE)

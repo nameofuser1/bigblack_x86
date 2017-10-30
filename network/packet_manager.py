@@ -1,5 +1,4 @@
 from .packet_parser import PacketParser, PacketType
-from . import network_exceptions as ex
 
 
 class PacketManager(object):
@@ -8,6 +7,15 @@ class PacketManager(object):
         self.packet_parser = PacketParser()
         self.network_manager = network_manager
         print("Created packet manager")
+
+    def start(self):
+        self.network_manager.start()
+
+    def stop(self):
+        try:
+            self.send_raw([], PacketType.CLOSE_CONNECTION_PACKET)
+        finally:
+            self.network_manager.stop()
 
     def get_packet_name(self, packet):
         return self.packet_parser.get_packet_name(packet)
