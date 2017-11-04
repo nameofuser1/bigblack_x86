@@ -30,3 +30,11 @@ class BrokenPacketError(NetworkBaseError):
     """
     def __init__(self, m=""):
         super(BrokenPacketError, self).__init__(m)
+
+
+class ErrorPacketError(NetworkBaseError):
+    """
+    Raised when got error packet
+    """
+    def __init__(self, m=""):
+        super(ErrorPacketError, self).__init__(m)

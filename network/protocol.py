@@ -17,6 +17,7 @@ PL_SET_ENCRYPTION_KEYS  =   0x19
 PL_SET_SIGN_KEYS        =   0x1A
 PL_ENABLE_ENCRYPTION    =   0x1B
 PL_ENABLE_SIGN          =   0x1C
+PL_ERROR                =   0x1D
 
 # Programmer packets
 PL_LOAD_MCU_INFO        =   0x20

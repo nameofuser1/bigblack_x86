@@ -1,4 +1,5 @@
 from .packet_parser import PacketParser, PacketType
+from .network_exceptions import ErrorPacketError
 
 
 class PacketManager(object):
@@ -41,5 +42,8 @@ class PacketManager(object):
         """
         packet = self.packet_parser.\
             parse(self.network_manager.read(timeout=timeout))
+
+        if packet["type"] == PacketType.ERROR_PACKET:
+            raise ErrorPacketError(str(packet["data"]))
 
         return packet

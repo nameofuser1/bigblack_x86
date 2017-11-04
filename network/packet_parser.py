@@ -17,15 +17,19 @@ class PacketType(object):
     SET_SIGN_KEYS_PACKET = 11
     ENABLE_ENCRYPTION_PACKET = 12
     ENABLE_SIGN_PACKET = 13
+    ERROR_PACKET = 14
 
-    LOAD_MCU_INFO_PACKET = 14
-    PROGRAM_MEMORY_PACKET = 15
-    READ_MEMORY_PACKET = 16
-    MEMORY_PACKET = 17
-    CMD_PACKET = 18
+    LOAD_MCU_INFO_PACKET = 15
+    PROGRAM_MEMORY_PACKET = 16
+    READ_MEMORY_PACKET = 17
+    MEMORY_PACKET = 18
+    CMD_PACKET = 19
 
-    UART_CONFIGURATION_PACKET = 19
-    UARD_DATA_PACKET = 20
+    UART_CONFIGURATION_PACKET = 20
+    UARD_DATA_PACKET = 21
+
+
+pt = PacketType
 
 
 class PacketParser(object):
@@ -76,7 +80,6 @@ class PacketParser(object):
                           sign=False):
 
             packet_len = len(data)
-
 
             if packet_len > pl.PL_MAX_DATA_LENGTH:
                 raise ex.BrokenPacketError("Packet is too large "
@@ -168,56 +171,57 @@ class PacketParser(object):
 
         def __create_packet_names_dict(self):
             self.packets_names = {
-                PacketType.PROGRAMMER_INIT_PACKET: "ProgrammerInitPacket",
-                PacketType.PROGRAMMER_STOP_PACKET: "ProgrammerStopPacket",
-                PacketType.UART_INIT_PACKET: "UartInitPacket",
-                PacketType.UART_STOP_PACKET: "UartStopPacket",
-                PacketType.RESET_PACKET: "ResetPacket",
-                PacketType.ACK_PACKET: "ACK packet",
-                PacketType.CLOSE_CONNECTION_PACKET: "CloseConnectionPacket",
-                PacketType.NETWORK_CONFIG_PACKET: "NetworkConfigPacket",
-                PacketType.SET_OBSERVER_KEY_PACKET: "SetObserverKeyPacket",
-                PacketType.SET_ENCRYPTION_KEYS_PACKET: "SetEncryptionKeysPacket",
-                PacketType.SET_SIGN_KEYS_PACKET: "SetSignKeysPacket",
-                PacketType.ENABLE_ENCRYPTION_PACKET: "EnableEncryptionPacket",
-                PacketType.ENABLE_SIGN_PACKET: "EnableSignPacket",
+                pt.PROGRAMMER_INIT_PACKET: "ProgrammerInitPacket",
+                pt.PROGRAMMER_STOP_PACKET: "ProgrammerStopPacket",
+                pt.UART_INIT_PACKET: "UartInitPacket",
+                pt.UART_STOP_PACKET: "UartStopPacket",
+                pt.RESET_PACKET: "ResetPacket",
+                pt.ACK_PACKET: "ACK packet",
+                pt.CLOSE_CONNECTION_PACKET: "CloseConnectionPacket",
+                pt.NETWORK_CONFIG_PACKET: "NetworkConfigPacket",
+                pt.SET_OBSERVER_KEY_PACKET: "SetObserverKeyPacket",
+                pt.SET_ENCRYPTION_KEYS_PACKET: "SetEncryptionKeysPacket",
+                pt.SET_SIGN_KEYS_PACKET: "SetSignKeysPacket",
+                pt.ENABLE_ENCRYPTION_PACKET: "EnableEncryptionPacket",
+                pt.ENABLE_SIGN_PACKET: "EnableSignPacket",
+                pt.ERROR_PACKET: "Error packet",
 
-                PacketType.LOAD_MCU_INFO_PACKET: "LoadMcuInfoPacket",
-                PacketType.PROGRAM_MEMORY_PACKET: "ProgramMemoryPacket",
-                PacketType.READ_MEMORY_PACKET: "ReadMemoryPacket",
-                PacketType.MEMORY_PACKET: "MemoryPacket",
-                PacketType.CMD_PACKET: "CMD Packet",
+                pt.LOAD_MCU_INFO_PACKET: "LoadMcuInfoPacket",
+                pt.PROGRAM_MEMORY_PACKET: "ProgramMemoryPacket",
+                pt.READ_MEMORY_PACKET: "ReadMemoryPacket",
+                pt.MEMORY_PACKET: "MemoryPacket",
+                pt.CMD_PACKET: "CMD Packet",
 
-                PacketType.UART_CONFIGURATION_PACKET: "UartConfigurationPacket",
-                PacketType.UARD_DATA_PACKET: "UartDataPacket"
+                pt.UART_CONFIGURATION_PACKET: "UartConfigurationPacket",
+                pt.UARD_DATA_PACKET: "UartDataPacket"
             }
 
         def __create_packet_type_byte_mappings(self):
             self._type_to_byte = {
-                PacketType.PROGRAMMER_INIT_PACKET: pl.PL_PROGRAMMER_INIT,
-                PacketType.PROGRAMMER_STOP_PACKET: pl.PL_PROGRAMMER_STOP,
-                PacketType.UART_INIT_PACKET: pl.PL_UART_INIT,
-                PacketType.UART_STOP_PACKET: pl.PL_UART_STOP,
-                PacketType.RESET_PACKET: pl.PL_RESET,
-                PacketType.ACK_PACKET: pl.PL_ACK,
-                PacketType.CLOSE_CONNECTION_PACKET: pl.PL_CLOSE_CONNECTION,
-                PacketType.NETWORK_CONFIG_PACKET: pl.PL_NETWORK_CONFIG,
-                PacketType.SET_OBSERVER_KEY_PACKET: pl.PL_SET_OBSERVER_KEY,
-                PacketType.SET_ENCRYPTION_KEYS_PACKET: pl.PL_SET_ENCRYPTION_KEYS,
-                PacketType.SET_SIGN_KEYS_PACKET: pl.PL_SET_SIGN_KEYS,
-                PacketType.ENABLE_ENCRYPTION_PACKET: pl.PL_ENABLE_ENCRYPTION,
-                PacketType.ENABLE_SIGN_PACKET: pl.PL_ENABLE_SIGN,
+                pt.PROGRAMMER_INIT_PACKET: pl.PL_PROGRAMMER_INIT,
+                pt.PROGRAMMER_STOP_PACKET: pl.PL_PROGRAMMER_STOP,
+                pt.UART_INIT_PACKET: pl.PL_UART_INIT,
+                pt.UART_STOP_PACKET: pl.PL_UART_STOP,
+                pt.RESET_PACKET: pl.PL_RESET,
+                pt.ACK_PACKET: pl.PL_ACK,
+                pt.CLOSE_CONNECTION_PACKET: pl.PL_CLOSE_CONNECTION,
+                pt.NETWORK_CONFIG_PACKET: pl.PL_NETWORK_CONFIG,
+                pt.SET_OBSERVER_KEY_PACKET: pl.PL_SET_OBSERVER_KEY,
+                pt.SET_ENCRYPTION_KEYS_PACKET: pl.PL_SET_ENCRYPTION_KEYS,
+                pt.SET_SIGN_KEYS_PACKET: pl.PL_SET_SIGN_KEYS,
+                pt.ENABLE_ENCRYPTION_PACKET: pl.PL_ENABLE_ENCRYPTION,
+                pt.ENABLE_SIGN_PACKET: pl.PL_ENABLE_SIGN,
+                pt.ERROR_PACKET: pl.PL_ERROR,
 
-                PacketType.LOAD_MCU_INFO_PACKET: pl.PL_LOAD_MCU_INFO,
-                PacketType.PROGRAM_MEMORY_PACKET: pl.PL_PROGRAM_MEMORY,
-                PacketType.READ_MEMORY_PACKET: pl.PL_READ_MEMORY,
-                PacketType.MEMORY_PACKET: pl.PL_MEMORY,
-                PacketType.CMD_PACKET: pl.PL_CMD,
+                pt.LOAD_MCU_INFO_PACKET: pl.PL_LOAD_MCU_INFO,
+                pt.PROGRAM_MEMORY_PACKET: pl.PL_PROGRAM_MEMORY,
+                pt.READ_MEMORY_PACKET: pl.PL_READ_MEMORY,
+                pt.MEMORY_PACKET: pl.PL_MEMORY,
+                pt.CMD_PACKET: pl.PL_CMD,
 
-                PacketType.UART_CONFIGURATION_PACKET: pl.PL_UART_CONFIGURATION,
-                PacketType.UARD_DATA_PACKET: pl.PL_UART_DATA
+                pt.UART_CONFIGURATION_PACKET: pl.PL_UART_CONFIGURATION,
+                pt.UARD_DATA_PACKET: pl.PL_UART_DATA
             }
 
-            self._byte_to_type = dict([v, k] for v,k in
+            self._byte_to_type = dict([v, k] for v, k in
                                       self._type_to_byte.iteritems())
-

@@ -87,9 +87,8 @@ class AvrProgrammer(HardwareProgrammer):
     # Initialize programmer (usart possible)
     # #######################################
     def init_programmer(self):
-        ack = self.send_recv([pl.PL_AVR_PROGRAMMER_BYTE],
-                             pt.PROGRAMMER_INIT_PACKET)
-        self._check_packet(ack, pt.ACK_PACKET)
+        self.send([pl.PL_AVR_PROGRAMMER_BYTE],
+                  pt.PROGRAMMER_INIT_PACKET)
 
         self.send_mcu_init()
         self.validate_signature()
@@ -145,10 +144,7 @@ class AvrProgrammer(HardwareProgrammer):
         init_data.extend(self.pgm_enable)
 
         packet = self.send_recv(init_data, pt.LOAD_MCU_INFO_PACKET)
-        self._check_packet(packet, pt.CMD_PACKET)
-
-        if int(packet["data"][0]) == 0:
-            raise ex.DeviceError("Can't enter pgm mode")
+        self._check_packet(packet, pt.ACK_PACKET)
 
         print("Successfully initialized")
         return True
